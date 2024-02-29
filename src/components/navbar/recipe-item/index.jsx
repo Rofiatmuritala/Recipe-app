@@ -1,7 +1,7 @@
-import { Grid, Card, CardMedia, CardContent, Typography } from "@mui/material";
+import { Grid, Card, CardMedia, CardContent, Typography, Link } from "@mui/material";
 
 
-export default function RecipeItem({title,image}){
+export default function RecipeItem({title,image, id}){
     return (
         <Grid item xs={4}>
         <Card sx={{ maxWidth: 345, height:'100%' }}>
@@ -14,9 +14,11 @@ export default function RecipeItem({title,image}){
                 title= "Recipe"
             />
             <CardContent>
+                <Link to= { `/recipes/${id}`}>
                 <Typography gutterBottom variant="h5" component="div">
                     {title}
                 </Typography>
+                </Link>
             </CardContent>
         </Card>
     </Grid>

@@ -45,7 +45,7 @@ export default function Recipes() {
                 variant="outlined" 
                 value={searchItem}
                 onChange={(e) => setSearchItem(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && searchRecipes()}
+                onKeyDown={e => e.key == 'Enter' && searchRecipes()}
                 />
 
             <Grid sx={{ mt: '1rem' }} container spacing={3}>
