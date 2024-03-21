@@ -14,7 +14,8 @@ export default function Recipes() {
 
         setLoading(true);
         // prepare url
-        const url = new URL('https://api.spoonacular.com/recipes/complexSearch');
+        // const url = new URL('https://api.spoonacular.com/recipes/complexSearch');
+        const url = new URL('http://localhost:4000/recipes');
         url.searchParams.append('apiKey', process.env.REACT_APP_SPOONACULAR_API_KEY);
         url.searchParams.append('query', searchItem);
         
@@ -23,7 +24,7 @@ export default function Recipes() {
         .then((response) => response.json())
         .then((data) => {
             // update the recipes state
-            setRecipes(data.results);
+            setRecipes(data.Data);
             // console.log(data);
         })
 
@@ -45,7 +46,7 @@ export default function Recipes() {
                 variant="outlined" 
                 value={searchItem}
                 onChange={(e) => setSearchItem(e.target.value)}
-                onKeyDown={e => e.key == 'Enter' && searchRecipes()}
+                onKeyDown={e => e.key === 'Enter' && searchRecipes()}
                 />
 
             <Grid sx={{ mt: '1rem' }} container spacing={3}>
@@ -53,7 +54,7 @@ export default function Recipes() {
                 <Container sx={{display: 'flex', justifyContent:'center', marginTop:'10%'}}>
                     <img src={spinner} width="20%" />
                 </Container>
-             ): recipes.length > 0 ? recipes.map((recipe) => <RecipeItem key={recipe.id} title={recipe.title} image={recipe.image} />): (
+             ): recipes.length > 0 ? recipes.map((recipe) => <RecipeItem key={recipe._id}  title={recipe.title} image={recipe.image} id={recipe._id} />) : (
                 <Container sx={{display: 'flex', justifyContent:'center', marginTop:'10%'}}>
                      <img src={noRecipes} width="20%" />
                 </Container>

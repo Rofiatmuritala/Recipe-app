@@ -1,4 +1,5 @@
-import { Grid, Card, CardMedia, CardContent, Typography, Link } from "@mui/material";
+import { Grid, Card, CardMedia, CardContent, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 
 export default function RecipeItem({title,image, id}){
@@ -14,7 +15,7 @@ export default function RecipeItem({title,image, id}){
                 title= "Recipe"
             />
             <CardContent>
-                <Link to= { `/recipes/${id}`}>
+                <Link to={ `/recipes/${id}`}>
                 <Typography gutterBottom variant="h5" component="div">
                     {title}
                 </Typography>
