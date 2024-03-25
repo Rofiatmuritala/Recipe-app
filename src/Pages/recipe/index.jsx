@@ -3,6 +3,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
 import spinner from "../../assets/Images/infinite-spinner.svg"
+import Navbar from '../../components/navbar';
 
 const getRecipe = (...args) => {
           // prepare url
@@ -21,12 +22,13 @@ console.log(recipe, isLoading)
 
   return (
     <>
+    <Navbar/>
     {isLoading? <img src={spinner}/>: (
     <Container>
       <h1>{recipe.Data.title}</h1>
     <p>{recipe.summary} </p> 
     <div dangerouslySetInnerHTML={{__html: recipe.summary}}></div>
-    <img src={recipe.image} />
+    <img src={recipe.image} alt='Recipe Image' />
     </Container>)}
     </>
   )

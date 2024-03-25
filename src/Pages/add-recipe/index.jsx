@@ -1,109 +1,117 @@
-import { Autocomplete, Box, Button, FormControl, FormHelperText, Input, InputLabel, TextField } from '@mui/material'
-import React from 'react'
 
-function AddRecipe() {
+import { Alert, Box, Collapse, Container, IconButton, MenuItem, TextField } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
+import Navbar from "../../components/navbar";
 
-    const countries = [
-        { code: 'AD', label: 'Andorra', phone: '376' },
-        {
-          code: 'AE',
-          label: 'United Arab Emirates',
-          phone: '971',
-        },
-        { code: 'AF', label: 'Afghanistan', phone: '93' },
-        {
-          code: 'AG',
-          label: 'Antigua and Barbuda',
-          phone: '1-268',
-        },
-        { code: 'AI', label: 'Anguilla', phone: '1-264' },
-        { code: 'AL', label: 'Albania', phone: '355' },
-        { code: 'AM', label: 'Armenia', phone: '374' },
-        { code: 'AO', label: 'Angola', phone: '244' },
-        { code: 'AQ', label: 'Antarctica', phone: '672' },
-        { code: 'AR', label: 'Argentina', phone: '54' },
-        { code: 'AS', label: 'American Samoa', phone: '1-684' },
-        { code: 'AT', label: 'Austria', phone: '43' },
-        {
-          code: 'AU',
-          label: 'Australia',
-          phone: '61',
-          suggested: true,
-        },]
+export const countries = [
+    { value: 'GH', label: 'Ghana' },
+    { value: 'NG', label: 'Nigeria' },
+    { value: 'BE', label: 'Benin' },
+    { value: 'TG', label: 'Togo' }
+];
 
-  return (
-    <div       sx={{ width: 300, alignItems:"center",
-    justify: "center" }}    >
-        <h1>Add a new recipe</h1>
-        <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' }, display:"center"
-      }}
-      noValidate
-      autoComplete="off"
-       >
-      <div>
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Recipe Title"
-          multiline
-          minRows={1}
-        />
+export default function AddRecipe() {
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('New Recipe Added Successfully!');
 
-        <div>
-            
-        <TextField
-          id="outlined-multiline-static"
-          label="Description"
-          multiline
-          rows={4}
-          defaultValue="Default Value"
-        />
-        </div>
-    
+    const addRecipe = async (event) => {
+        // Set loading to true
+        setLoading(true)
+        // Prevent default form submit behavior
+        event.preventDefault()
+        // Get form data
+        const formData = new FormData(event.target)
+       
+        // Post form data to the backend
 
-     <form>
-      <TextField type="file" />
-      {/* <Button variant="contained" color="primary" component="span">
-      </Button> */}
-     </form>
+        const response = await fetch( "http://localhost:4000/recipes", {
+          method: "POST",
+          body: formData
+        })
 
-    
-     <Autocomplete
-      id="country-select-demo"
-      sx={{ width: 300 }}
-      options={countries}
-      autoHighlight
-      getOptionLabel={(option) => option.label}
-      renderOption={(props, option) => (
-        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-          <img
-            loading="lazy"
-            width="20"
-            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-            alt=""
-          />
-          {option.label} ({option.code}) +{option.phone}
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Choose a country"
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
-          }}
-        />
-      )}
-      />
-    
-      </div>
-      </Box>
-    </div>
-  )
+        console.log(response)
+        // const data = response.json
+        // Update message based on response status
+        // Open collapsible Alert
+        // Set loading to false
+        setLoading(false)
+    }
+
+    return (
+        <>
+            <Navbar />
+            <Container sx={{ my: '2rem' }} maxWidth="sm">
+                <h1>Add A New Recipe</h1>
+                <form onSubmit={addRecipe}>
+                    <TextField
+                        sx={{ mb: '2rem' }}
+                        fullWidth
+                        name="title"
+                        label="Recipe Title" />
+                    <TextField
+                        sx={{ mb: '2rem' }}
+                        fullWidth
+                        name="description"
+                        label="Recipe Description"
+                        multiline
+                        rows={4} />
+                    <TextField
+                        sx={{ mb: '2rem' }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        type="file"
+                        fullWidth
+                        name="image"
+                        label="Recipe Image" />
+                    <TextField
+                        sx={{ mb: '2rem' }}
+                        select
+                        fullWidth
+                        name="country"
+                        label="Recipe Country"
+                        defaultValue="GH"
+                    >
+                        {countries.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <Box textAlign="center">
+                        <Collapse in={open}>
+                            <Alert
+                                action={
+                                    <IconButton
+                                        aria-label="close"
+                                        color="inherit"
+                                        size="small"
+                                        onClick={() => {
+                                            setOpen(false);
+                                        }}
+                                    >
+                                        <Close fontSize="inherit" />
+                                    </IconButton>
+                                }
+                                sx={{ mb: 2 }}
+                            >{message}</Alert>
+                        </Collapse>
+
+                        <LoadingButton
+                            sx={{ width: '50%' }}
+                            loading={loading}
+                            type="submit"
+                            size="large"
+                            color="secondary"
+                            variant="contained">
+                            Add New Recipe
+                        </LoadingButton>
+                    </Box>
+                </form>
+            </Container>
+        </>
+    );
 }
-
-export default AddRecipe
